@@ -119,3 +119,4 @@ if "%1"=="list" (
 
 echo 错误：未知命令 "%1"。
 echo 使用 "ssh-helper help" 查看命令帮助。
+goto :eof
