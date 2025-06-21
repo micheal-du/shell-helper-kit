@@ -4,20 +4,24 @@ set KEY_PATH=C:/Users/yonga/.ssh/id_rsa
 set PUB_KEY_PATH=%KEY_PATH%.pub
 
 :: 帮助功能
-if "%1"=="" (
-    echo 可用命令：
-    echo    generate  - 生成 SSH 私钥和公钥
-    echo    show      - 显示当前私钥和公钥内容
-    echo    show-path - 显示当前私钥和公钥的路径
-    echo    copy      - 将公钥复制到远程服务器
-    echo    connect   - 使用 SSH 连接到远程服务器
-    echo    test      - 测试 SSH 连接是否成功
-    echo    config    - 配置 SSH 客户端设置
-    echo    list      - 列出已知主机
-    echo    help      - 显示帮助
-    goto :eof
-)
+if "%1"=="" goto :help
+if "%1"=="help" goto :help
+goto :check_other_commands
 
+:help
+echo 可用命令：
+echo    generate  - 生成 SSH 私钥和公钥
+echo    show      - 显示当前私钥和公钥内容
+echo    show-path - 显示当前私钥和公钥的路径
+echo    copy      - 将公钥复制到远程服务器
+echo    connect   - 使用 SSH 连接到远程服务器
+echo    test      - 测试 SSH 连接是否成功
+echo    config    - 配置 SSH 客户端设置
+echo    list      - 列出已知主机
+echo    help      - 显示帮助
+goto :eof
+
+:check_other_commands
 :: 显示当前私钥和公钥的路径
 if "%1"=="show-path" (
     echo 当前私钥路径：%KEY_PATH%
