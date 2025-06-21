@@ -1,6 +1,6 @@
 @echo off
 :: 设置 SSH 密钥路径 (Windows 上的路径)
-set KEY_PATH=C:/Users/yonga/.ssh/id_rsa
+set KEY_PATH=C:\Users\yonga\.ssh\id_rsa
 set PUB_KEY_PATH=%KEY_PATH%.pub
 
 :: 帮助功能
