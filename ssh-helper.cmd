@@ -1,117 +1,117 @@
 @echo off
-:: 设置 SSH 密钥路径 (Windows 上的路径)
+:: ���� SSH ��Կ·�� (Windows �ϵ�·��)
 set KEY_PATH=C:/Users/yonga/.ssh/id_rsa
 set PUB_KEY_PATH=%KEY_PATH%.pub
 
-:: 帮助功能
-if "%1"=="help" (
-    echo 可用命令：
-    echo    generate  - 生成 SSH 私钥和公钥
-    echo    show      - 显示当前私钥和公钥内容
-    echo    show-path - 显示当前私钥和公钥的路径
-    echo    copy      - 将公钥复制到远程服务器
-    echo    connect   - 使用 SSH 连接到远程服务器
-    echo    test      - 测试 SSH 连接是否成功
-    echo    config    - 配置 SSH 客户端设置
-    echo    list      - 列出已知主机
-    echo    help      - 显示帮助
+:: ��������
+if "%1"=="" (
+    echo �������
+    echo    generate  - ���� SSH ˽Կ�͹�Կ
+    echo    show      - ��ʾ��ǰ˽Կ�͹�Կ����
+    echo    show-path - ��ʾ��ǰ˽Կ�͹�Կ��·��
+    echo    copy      - ����Կ���Ƶ�Զ�̷�����
+    echo    connect   - ʹ�� SSH ���ӵ�Զ�̷�����
+    echo    test      - ���� SSH �����Ƿ�ɹ�
+    echo    config    - ���� SSH �ͻ�������
+    echo    list      - �г���֪����
+    echo    help      - ��ʾ����
     goto :eof
 )
 
-:: 显示当前私钥和公钥的路径
+:: ��ʾ��ǰ˽Կ�͹�Կ��·��
 if "%1"=="show-path" (
-    echo 当前私钥路径：%KEY_PATH%
-    echo 当前公钥路径：%PUB_KEY_PATH%
+    echo ��ǰ˽Կ·����%KEY_PATH%
+    echo ��ǰ��Կ·����%PUB_KEY_PATH%
     goto :eof
 )
 
-:: 生成 SSH 密钥
+:: ���� SSH ��Կ
 if "%1"=="generate" (
-    echo 正在生成 SSH 私钥和公钥...
+    echo �������� SSH ˽Կ�͹�Կ...
     if not exist "%KEY_PATH%" (
         ssh-keygen -t rsa -b 4096 -f "%KEY_PATH%" -N ""
-        echo 密钥对生成完成：%KEY_PATH% 和 %PUB_KEY_PATH%
+        echo ��Կ��������ɣ�%KEY_PATH% �� %PUB_KEY_PATH%
     ) else (
-        echo 私钥已存在：%KEY_PATH%，跳过生成步骤。
+        echo ˽Կ�Ѵ��ڣ�%KEY_PATH%���������ɲ��衣
     )
     goto :eof
 )
 
-:: 显示当前私钥和公钥内容
+:: ��ʾ��ǰ˽Կ�͹�Կ����
 if "%1"=="show" (
-    echo 显示当前的私钥和公钥内容：
+    echo ��ʾ��ǰ��˽Կ�͹�Կ���ݣ�
     if exist "%KEY_PATH%" (
-        echo 私钥内容：
+        echo ˽Կ���ݣ�
         type "%KEY_PATH%"
         echo.
     ) else (
-        echo 私钥文件不存在。
+        echo ˽Կ�ļ������ڡ�
     )
     if exist "%PUB_KEY_PATH%" (
-        echo 公钥内容：
+        echo ��Կ���ݣ�
         type "%PUB_KEY_PATH%"
         echo.
     ) else (
-        echo 公钥文件不存在。
+        echo ��Կ�ļ������ڡ�
     )
     goto :eof
 )
 
-:: 将公钥复制到远程服务器
+:: ����Կ���Ƶ�Զ�̷�����
 if "%1"=="copy" (
-    set /p REMOTE_USER=请输入远程服务器用户名: 
-    set /p REMOTE_SERVER=请输入远程服务器IP地址: 
-    echo 正在将公钥复制到远程服务器 %REMOTE_SERVER% 上...
+    set /p REMOTE_USER=������Զ�̷������û���: 
+    set /p REMOTE_SERVER=������Զ�̷�����IP��ַ: 
+    echo ���ڽ���Կ���Ƶ�Զ�̷����� %REMOTE_SERVER% ��...
     ssh-copy-id -i "%PUB_KEY_PATH%" %REMOTE_USER%@%REMOTE_SERVER%
     if %ERRORLEVEL% EQU 0 (
-        echo 公钥成功复制到服务器 %REMOTE_SERVER%。
+        echo ��Կ�ɹ����Ƶ������� %REMOTE_SERVER%��
     ) else (
-        echo 公钥复制失败。请检查用户名和服务器连接。
+        echo ��Կ����ʧ�ܡ������û����ͷ��������ӡ�
     )
     goto :eof
 )
 
-:: 使用 SSH 连接到远程服务器
+:: ʹ�� SSH ���ӵ�Զ�̷�����
 if "%1"=="connect" (
-    set /p REMOTE_USER=请输入远程服务器用户名: 
-    set /p REMOTE_SERVER=请输入远程服务器IP地址: 
-    echo 正在使用 SSH 连接到 %REMOTE_SERVER%...
+    set /p REMOTE_USER=������Զ�̷������û���: 
+    set /p REMOTE_SERVER=������Զ�̷�����IP��ַ: 
+    echo ����ʹ�� SSH ���ӵ� %REMOTE_SERVER%...
     ssh -i "%KEY_PATH%" %REMOTE_USER%@%REMOTE_SERVER%
     goto :eof
 )
 
-:: 测试 SSH 连接是否成功
+:: ���� SSH �����Ƿ�ɹ�
 if "%1"=="test" (
-    set /p REMOTE_USER=请输入远程服务器用户名: 
-    set /p REMOTE_SERVER=请输入远程服务器IP地址: 
-    echo 正在测试与 %REMOTE_SERVER% 的 SSH 连接...
+    set /p REMOTE_USER=������Զ�̷������û���: 
+    set /p REMOTE_SERVER=������Զ�̷�����IP��ַ: 
+    echo ���ڲ����� %REMOTE_SERVER% �� SSH ����...
     ssh -o BatchMode=yes -o ConnectTimeout=5 %REMOTE_USER%@%REMOTE_SERVER% exit
     if %ERRORLEVEL% EQU 0 (
-        echo SSH 连接成功！
+        echo SSH ���ӳɹ���
     ) else (
-        echo SSH 连接失败，请检查连接设置或服务器状态。
+        echo SSH ����ʧ�ܣ������������û������״̬��
     )
     goto :eof
 )
 
-:: 配置 SSH 客户端设置
+:: ���� SSH �ͻ�������
 if "%1"=="config" (
-    echo 配置 SSH 客户端设置...
-    echo 如果你想设置默认的 SSH 端口、用户名等配置，请修改以下文件中的设置：
+    echo ���� SSH �ͻ�������...
+    echo �����������Ĭ�ϵ� SSH �˿ڡ��û��������ã����޸������ļ��е����ã�
     echo %USERPROFILE%\.ssh\config
-    echo 可以使用以下命令进行编辑：
+    echo ����ʹ������������б༭��
     echo notepad %USERPROFILE%\.ssh\config
     goto :eof
 )
 
-:: 列出已知主机
+:: �г���֪����
 if "%1"=="list" (
-    echo 列出已知的 SSH 主机：
+    echo �г���֪�� SSH ������
     echo -----------------------------------
     type "%USERPROFILE%\.ssh\known_hosts"
     echo -----------------------------------
     goto :eof
 )
 
-echo 错误：未知命令 "%1"。
-echo 使用 "ssh-helper help" 查看命令帮助。
+echo ����δ֪���� "%1"��
+echo ʹ�� "ssh-helper help" �鿴���������
