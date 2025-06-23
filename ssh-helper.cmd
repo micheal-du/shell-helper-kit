@@ -1,4 +1,7 @@
 @echo off
+:: 启用延迟扩展和扩展特性
+setlocal enableextensions enabledelayedexpansion  
+
 :: 设置 SSH 密钥路径 (Windows 上的路径)
 set KEY_PATH=C:\Users\yonga\.ssh\id_rsa
 set PUB_KEY_PATH=%KEY_PATH%.pub
@@ -76,13 +79,37 @@ if "%1"=="copy" (
 )
 
 :: 使用 SSH 连接到远程服务器
+:: if "%1"=="connect" (
+::     set /p REMOTE_USER=请输入远程服务器用户名: 
+::     set /p REMOTE_SERVER=请输入远程服务器IP地址: 
+::     echo 你输入的用户名是：%REMOTE_USER%
+::     echo 你输入的IP是：%REMOTE_SERVER%
+::     echo 正在使用 SSH 连接到 %REMOTE_SERVER%...
+::     ssh -i "%KEY_PATH%" %REMOTE_USER%@%REMOTE_SERVER%
+::     goto :eof
+:: )
+
+:: 使用 SSH 连接到远程服务器
 if "%1"=="connect" (
+    echo 使用的密钥路径为：!KEY_PATH!  
+    
+    if not exist "!KEY_PATH!" (  
+        :: 使用 !KEY_PATH!
+        echo 错误: 未找到 SSH 私钥文件：!KEY_PATH!
+        echo 请确保密钥文件存在，并且KEY_PATH变量设置正确。
+        goto :eof
+    )
+
     set /p REMOTE_USER=请输入远程服务器用户名: 
     set /p REMOTE_SERVER=请输入远程服务器IP地址: 
-    echo 正在使用 SSH 连接到 %REMOTE_SERVER%...
-    ssh -i "%KEY_PATH%" %REMOTE_USER%@%REMOTE_SERVER%
+    
+    echo 你输入的用户名是：!REMOTE_USER!  
+    echo 你输入的IP是：!REMOTE_SERVER!  
+    echo 正在使用 SSH 连接到 !REMOTE_SERVER!... 
+    ssh -i "!KEY_PATH!" !REMOTE_USER!@!REMOTE_SERVER! 
     goto :eof
 )
+
 
 :: 测试 SSH 连接是否成功
 if "%1"=="test" (
